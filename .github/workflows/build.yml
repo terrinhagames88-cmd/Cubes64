@@ -1,0 +1,24 @@
+name: Build ROM
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/dragonminded/libdragon:latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: DragonMinded/libdragon
+          ref: preview
+          path: libdragon
+      - name: Build libdragon
+        run: cd libdragon && ./build.sh --no-examples
+      - name: Build ROM
+        run: make
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cubos64-rom
+          path: cubos64.z64
